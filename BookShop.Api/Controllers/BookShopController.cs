@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookShop.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[Controller]")]
 
     public class BookShopController : ControllerBase
     {

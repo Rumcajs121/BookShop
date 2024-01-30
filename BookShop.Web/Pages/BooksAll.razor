@@ -1,0 +1,49 @@
+﻿@page "/booksAll"
+@using BookShop.Web.Services
+@inject IBooksService BooksService
+
+<h3>Lista Książek</h3>
+
+@if (Books != null && Books.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tytuł</th>
+                <th>Opis</th>
+                <th>Autor</th>
+                <th>Marka</th>
+                <th>Obraz</th>
+                <th>Dostępność</th>
+                <th>Cena</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Books)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Description</td>
+                    <td>@book.Author</td>
+                    <td>@book.Brand</td>
+                    <td>@book.Image</td>
+                    <td>@book.Availability</td>
+                    <td>@book.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Brak książek do wyświetlenia.</p>
+}
+
+@code {
+    private List<BookDto> Books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Books = await BooksService.GetAll();
+    }
+}
