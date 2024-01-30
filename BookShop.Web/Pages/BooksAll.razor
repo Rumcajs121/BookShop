@@ -1,49 +1,55 @@
 ﻿@page "/booksAll"
-@using BookShop.Web.Services
-@inject IBooksService BooksService
 
-<h3>Lista Książek</h3>
+@inject IBooksService BooksService
+<div class="text-center p-3"><h3 class="m-2">Lista Książek</h3></div>
 
 @if (Books != null && Books.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Tytuł</th>
-                <th>Opis</th>
-                <th>Autor</th>
-                <th>Marka</th>
-                <th>Obraz</th>
-                <th>Dostępność</th>
-                <th>Cena</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Books)
-            {
-                <tr>
-                    <td>@book.Title</td>
-                    <td>@book.Description</td>
-                    <td>@book.Author</td>
-                    <td>@book.Brand</td>
-                    <td>@book.Image</td>
-                    <td>@book.Availability</td>
-                    <td>@book.Price</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div class="row">
+        @foreach (var book in Books)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card" @onmouseover="() => OnTileHover(true)" @onmouseout="() => OnTileHover(false)">
+                    <img src="@book.Image" alt="@book.Title" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text book-description">
+                            @book.Description
+                        </p>
+                        <p class="card-text">Cena: @book.Price PLN</p>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="btn btn-sm btn-primary">Więcej</button>
+                        <button class="btn btn-sm btn-success">Kup teraz</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {
-    <p>Brak książek do wyświetlenia.</p>
-}
+        <div class="loading-content">
+            <div class="spinner-border text-primary" role="status">
+            </div>
+            <p>Trwa ładowanie danych...</p>
+        </div>
 
+}
 @code {
+    private bool IsLoading { get; set; } = true;
     private List<BookDto> Books;
 
     protected override async Task OnInitializedAsync()
     {
         Books = await BooksService.GetAll();
+        await Task.Delay(2000);
+        IsLoading = false;
+    }
+    private bool isTileHovered = false;
+
+    private void OnTileHover(bool isHovered)
+    {
+        isTileHovered = isHovered;
     }
 }
