@@ -9,7 +9,7 @@ namespace BookShop.Web.Services
     {
         private readonly HttpClient _httpClient;
 
-        public BookServices(HttpClient httpClient)
+        public BookServices(HttpClient httpClient, LocalStorage)
         {
             _httpClient = httpClient;
         }
@@ -22,5 +22,15 @@ namespace BookShop.Web.Services
             var books = JsonConvert.DeserializeObject<List<BookDto>>(content);
             return books;
         }
+
+        public async Task<BookDto> GetBook(string guid)
+        {
+            
+            var response = await _httpClient.GetAsync($"BookShop/GetBook/{guid}");
+            var content=await response.Content.ReadAsStringAsync();
+            var book=JsonConvert.DeserializeObject<BookDto>(content);
+            return book;
+        }
+
     }
 }

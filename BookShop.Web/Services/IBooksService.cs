@@ -5,5 +5,6 @@ namespace BookShop.Web.Services
     public interface IBooksService
     {
         Task<List<BookDto>> GetAll();
+        Task<BookDto> GetBook(string guid);
     }
 }

@@ -8,7 +8,9 @@ namespace BookShop.Api.Models
     {
         public DtoMappingProfile()
         {
-            CreateMap<Book, BookDto>();
+            CreateMap<Book, BookDto>()
+                .ForMember(x=>x.Guid,
+                opt=>opt.MapFrom(src=>src.Guid.ToString()));
         }
     }
 }

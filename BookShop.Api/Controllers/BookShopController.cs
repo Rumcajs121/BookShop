@@ -23,10 +23,10 @@ namespace BookShop.Api.Controllers
             return Ok(books);
         }
         [HttpGet]
-        [Route("[Action]/{Guid}")]
-        public async Task<IActionResult> GetBook([FromRoute] Guid Guid)
+        [Route("[Action]/{IndexBook}")]
+        public async Task<IActionResult> GetBook([FromRoute] Guid IndexBook)
         {
-            var book = await _repository.GetBook(Guid);
+            var book = await _repository.GetBook(IndexBook);
             return Ok(book);
         }
     }

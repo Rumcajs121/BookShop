@@ -1,10 +1,50 @@
-﻿@page "/getBook/{Title}"
-
-<h3>UDAŁO SIĘ</h3>
-
+﻿@page "/getBook/{Guid}"
+@inject IBooksService BooksService
+@if (book != null)
+{
+    <div class="card">
+        <h3 class="text-center card-title">@book.Title</h3>
+        <img class="card-img-top mx-auto my-auto img-fluid" src="@book.Image" alt="@book.Title" style="max-width: 50%; max-height: 50%;">
+        <div class="card-body">
+            <p>Opis Szczegółowy:</p>
+            <p class="card-text book-description">@book.Description</p>
+            <p class="card-text">Autor: @book.Author</p>
+            <p class="card-text">Wydawnictwo: @book.Brand</p>
+            <p class="card-text">Cena: @book.Price PLN</p>
+        </div>
+        <div class="card-buttons">
+            @if (book.Availability)
+            {
+                <button class="btn btn-danger">
+                    Kup teraz
+                </button>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert" style:"">
+                    NIEDOSTĘPNY
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="loading-content">
+        <div class="spinner-border text-primary" role="status">
+        </div>
+        <p>Trwa ładowanie danych...</p>
+    </div>
+}
 
 @code {
     [Parameter] 
-    public string Title { get; set; }
+    public string Guid { get; set; }
+    public BookDto book { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+
+        book = await BooksService.GetBook(Guid);
+    }
 }
