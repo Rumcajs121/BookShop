@@ -1,6 +1,6 @@
 ﻿@page "/booksAll"
-
 @inject IBooksService BooksService
+
 <div class="text-center p-3"><h3 class="m-2">Lista Książek</h3></div>
 
 @if (Books != null && Books.Any())
@@ -19,8 +19,9 @@
                         <p class="card-text">Cena: @book.Price PLN</p>
                     </div>
                     <div class="card-buttons">
-                        <button class="btn btn-sm btn-primary">Więcej</button>
+                        <NavLink class="btn btn-sm btn-primary" href="@($"/getBook/{book.Title}")">Więcej</NavLink>>
                         <button class="btn btn-sm btn-success">Kup teraz</button>
+
                     </div>
                 </div>
             </div>
@@ -37,6 +38,7 @@ else
 
 }
 @code {
+    public string IndexBook { get; set; }
     private bool IsLoading { get; set; } = true;
     private List<BookDto> Books;
 

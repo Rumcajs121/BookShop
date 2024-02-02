@@ -22,5 +22,12 @@ namespace BookShop.Api.Controllers
             var books=await _repository.GettAll();
             return Ok(books);
         }
+        [HttpGet]
+        [Route("[Action]/{Guid}")]
+        public async Task<IActionResult> GetBook([FromRoute] Guid Guid)
+        {
+            var book = await _repository.GetBook(Guid);
+            return Ok(book);
+        }
     }
 }

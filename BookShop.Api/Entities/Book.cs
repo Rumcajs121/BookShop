@@ -3,6 +3,7 @@
     public class Book
     {
         public int Id { get; set; }
+        public Guid Guid { get; set; } = new Guid();
         public string Title { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string Author { get; set; } = default!;

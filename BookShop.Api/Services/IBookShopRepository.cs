@@ -6,5 +6,6 @@ namespace BookShop.Api.Services
     public interface IBookShopRepository
     {
         Task <List<BookDto>> GettAll();
+        Task<BookDto> GetBook(Guid Guid);
     }
 }

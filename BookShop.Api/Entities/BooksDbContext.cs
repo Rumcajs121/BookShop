@@ -23,6 +23,9 @@ namespace BookShop.Api.Entities
             modelBuilder.Entity<Book>()
                 .Property(x => x.Price)
                 .IsRequired().HasColumnType("decimal(18,2)");
+            modelBuilder.Entity<Book>()
+                .Property(x => x.Guid)
+                .IsRequired();
         }
     }
 }

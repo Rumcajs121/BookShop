@@ -16,6 +16,13 @@ namespace BookShop.Api.Services
             _mapper = mapper;
         }
 
+        public async Task<BookDto> GetBook(Guid Guid)
+        {
+            var book=  await _dbContext.Books.FirstOrDefaultAsync(x=>x.Guid == Guid);
+            var bookDto=_mapper.Map<BookDto>(book);
+            return bookDto;
+        }
+
         public async Task<List<BookDto>> GettAll()
         {
             var books = await _dbContext.Books.ToListAsync();
