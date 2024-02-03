@@ -1,4 +1,6 @@
-﻿<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+﻿@inject IBooksService BooksService
+@inject EventService EventService
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BlazingTopMenu</a>
         <button class="navbar-toggler @NavButtonCssClass" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
@@ -17,9 +19,20 @@
                         <span class="oi oi-list-rich" aria-hidden="true"></span> GettAll
                     </NavLink>
                 </li>
+            </ul>
+            <ul class="navbar-nav">
                 <li class="nav-item">
                     <NavLink class="nav-link" href="shopingCart">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Koszyk
+                        <div class="d-flex align-items-center">
+                            <div class="oi oi-list-rich" aria-hidden="true">Koszyk</div>
+                            @if (CartItemCount > 0)
+                            {
+                                <div class="badge bg-danger ms-2">
+                                    @CartItemCount
+                                </div>
+                            }
+                        </div>
+                     
                     </NavLink>
                 </li>
             </ul>
@@ -35,5 +48,27 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+    private int CartItemCount { get; set; }
+
+    protected override void OnInitialized()
+    {
+        UpdateCartItemCount();
+        EventService.OnCartUpdated += UpdateCartItemCount;
+
+    }
+
+    private void UpdateCartItemCount()
+    {
+        InvokeAsync(async () =>
+        {
+            CartItemCount = await BooksService.ShopingCartCount();
+            StateHasChanged();
+        });
+    }
+
+    private void Dispose()
+    {
+        EventService.OnCartUpdated -= UpdateCartItemCount;
     }
 }

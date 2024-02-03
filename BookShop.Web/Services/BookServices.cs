@@ -16,10 +16,43 @@ namespace BookShop.Web.Services
             _localStorageService = localStorageService;
         }
 
+        public async Task<List<ShoppingCart>> GetAllCart()
+        {
+            List<ShoppingCart> carts= await _localStorageService.GetItemAsync<List<ShoppingCart>>("cart");
+            return carts;
+        }
 
+        public async Task AddToCart(BookDto book)
+        {
+            var cart = await GetAllCart();
 
-        //Api call
-        public async Task<List<BookDto>> GetAll()
+            if (cart == null)
+            {
+                cart = new List<ShoppingCart>();
+            }
+
+            var cartItem = new ShoppingCart
+            {
+                BookId = book.Guid,
+                Title = book.Title,
+                Price = book.Price,
+                Image = book.Image,
+                Quantity = 1
+            };
+
+            cart.Add(cartItem);
+
+            await _localStorageService.SetItemAsync("cart", cart);
+            
+        }
+        public async Task<int> ShopingCartCount()
+        {
+            var cartItems = await _localStorageService.GetItemAsync<List<ShoppingCart>>("cart");
+            return cartItems?.Count ?? 0;
+        }
+
+            //Api call
+            public async Task<List<BookDto>> GetAll()
         {
             var response = await _httpClient.GetAsync("BookShop/GetAll");
             response.EnsureSuccessStatusCode();
@@ -27,6 +60,8 @@ namespace BookShop.Web.Services
             var books = JsonConvert.DeserializeObject<List<BookDto>>(content);
             return books;
         }
+
+
 
         public async Task<BookDto> GetBook(string guid)
         {
@@ -36,33 +71,7 @@ namespace BookShop.Web.Services
             var book=JsonConvert.DeserializeObject<BookDto>(content);
             return book;
         }
-        //    //SchopingCart
-        //    public async Task AddToCart(ShoppingCart shoppingCart)
-        //    {
-        //        var cartItems = await GetAllCart();
 
-        //        if (cartItems.Any(x => x.Guid == shoppingCart.Guid))
-        //        {
-        //            var existingItem = cartItems.First(x => x.Guid == shoppingCart.Guid);
-        //            existingItem.Quantity += shoppingCart.Quantity;
-        //        }
-        //        else
-        //        {
-        //            cartItems.Add(shoppingCart);
-        //        }
 
-        //        await _localStorageService.SetItemAsync("cartItems", cartItems);
-        //    }
-
-        //    public async Task<List<ShoppingCart>> GetAllCart()
-        //    {
-        //        var carItems = await _localStorageService.GetItemAsync<List<ShoppingCart>>("carItems");
-        //        return carItems ?? new List<ShoppingCart>();
-        //    }
-
-        //    public async Task ClearCart()
-        //    {
-        //        await _localStorageService.RemoveItemAsync("cartItems");
-        //    }
     }
 }

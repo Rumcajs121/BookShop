@@ -1,5 +1,7 @@
 ﻿@page "/getBook/{Guid}"
 @inject IBooksService BooksService
+@inject EventService EventService
+@inject ILocalStorageService LocalStorage
 @if (book != null)
 {
     <div class="card">
@@ -15,7 +17,7 @@
         <div class="card-buttons">
             @if (book.Availability)
             {
-                <button class="btn btn-danger">
+                <button class="btn btn-danger" @onclick="()=>AddToCart(book)">
                     Kup teraz
                 </button>
             }
@@ -46,5 +48,10 @@ else
     {
 
         book = await BooksService.GetBook(Guid);
+    }
+    private async Task AddToCart(BookDto book)
+    {
+        await BooksService.AddToCart(book);
+        EventService.NotifyCartUpdated();
     }
 }

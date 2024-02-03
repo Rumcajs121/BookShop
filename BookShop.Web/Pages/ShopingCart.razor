@@ -23,10 +23,10 @@
                         {
                             <tr>
                                 <td>
-                                    <img src="@item.Image" class="img-thumbnail" style="width: 100px;" />
+                                    <a href="@($"/getBook/{item.BookId}")"><img src="@item.Image" class="img-thumbnail" style="width: 100px;" /></a>
                                 </td>
                                 <td>
-                                    @item.Title
+                                    <a href="@($"/getBook/{item.BookId}")">@item.Title</a>
                                 </td>
                                 <td>
                                     @item.Price PLN
@@ -51,10 +51,12 @@ else
 }
 
 @code {
+
     private List<ShoppingCart> CartItems { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        CartItems = await LocalStorage.GetItemAsync<List<ShoppingCart>>("cart");
+        CartItems = await BooksService.GetAllCart();
     }
+    
 }
