@@ -1,0 +1,60 @@
+﻿@page "/shopingCart"
+@inject IBooksService BooksService
+@inject ILocalStorageService LocalStorage
+
+@if (CartItems != null && CartItems.Any())
+{
+    <div class="container">
+        <h2>Koszyk</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">Miniaturka</th>
+                            <th class="col-md-4">Tytuł</th>
+                            <th class="col-md-1">Cena</th>
+                            <th class="col-md-1">Ilość</th>
+                            <th class="col-md-1">Usuń</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in CartItems)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@item.Image" class="img-thumbnail" style="width: 100px;" />
+                                </td>
+                                <td>
+                                    @item.Title
+                                </td>
+                                <td>
+                                    @item.Price PLN
+                                </td>
+                                <td>
+                                    <input type="number" min="1" value="@item.Quantity" class="form-control text-center " />
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-danger">Usuń</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Koszyk jest pusty</p>
+}
+
+@code {
+    private List<ShoppingCart> CartItems { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CartItems = await LocalStorage.GetItemAsync<List<ShoppingCart>>("cart");
+    }
+}

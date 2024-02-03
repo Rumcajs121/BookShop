@@ -2,7 +2,7 @@
 {
     public class ShoppingCart
     {
-        public string Guid { get; set; }
+        public string BookId { get; set; }
         public string Title { get; set; }
         public string? Image { get; set; }
         public decimal Price { get; set; }
