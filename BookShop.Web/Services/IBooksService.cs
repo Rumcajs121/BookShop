@@ -10,5 +10,6 @@ namespace BookShop.Web.Services
         Task<int> ShopingCartCount();
         Task AddToCart(BookDto book);
         Task<List<ShoppingCart>> GetAllCart();
+        Task<List<ShoppingCart>> DeleteItem(ShoppingCart item);
     }
 }

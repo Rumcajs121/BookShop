@@ -29,13 +29,13 @@
                                     <a href="@($"/getBook/{item.BookId}")">@item.Title</a>
                                 </td>
                                 <td>
-                                    @item.Price PLN
+                                    @ItemPriceForQuantity(item.Price,item.Quantity) zł                              
                                 </td>
                                 <td>
                                     <input type="number" min="1" value="@item.Quantity" class="form-control text-center " />
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-danger">Usuń</button>
+                                    <button class="btn btn-sm btn-danger" @onclick="()=>DeleteItemCart(item)">Usuń</button>
                                 </td>
                             </tr>
                         }
@@ -58,5 +58,26 @@ else
     {
         CartItems = await BooksService.GetAllCart();
     }
-    
+    private async Task DeleteItemCart(ShoppingCart item)
+    {
+        var updatedCart = await BooksService.DeleteItem(item);
+        if (updatedCart != null)
+        {
+            CartItems = updatedCart;
+            StateHasChanged();
+        }
+    }
+    private decimal ItemPriceForQuantity(decimal price, int quantity)
+    {
+        if (quantity > 1)
+        {
+            decimal x = (decimal)quantity;
+            return price * x;
+        }
+        else
+        {
+            return price;
+        }
+    }
+
 }

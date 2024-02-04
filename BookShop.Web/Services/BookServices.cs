@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components;
 
 namespace BookShop.Web.Services
 {
@@ -9,11 +10,13 @@ namespace BookShop.Web.Services
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorageService;
+        private readonly EventService _eventService;
 
-        public BookServices(HttpClient httpClient, ILocalStorageService localStorageService)
+        public BookServices(HttpClient httpClient, ILocalStorageService localStorageService,EventService eventService)
         {
             _httpClient = httpClient;
             _localStorageService = localStorageService;
+            _eventService = eventService;
         }
 
         public async Task<List<ShoppingCart>> GetAllCart()
@@ -25,7 +28,7 @@ namespace BookShop.Web.Services
         public async Task AddToCart(BookDto book)
         {
             var cart = await GetAllCart();
-
+            
             if (cart == null)
             {
                 cart = new List<ShoppingCart>();
@@ -39,11 +42,18 @@ namespace BookShop.Web.Services
                 Image = book.Image,
                 Quantity = 1
             };
-
-            cart.Add(cartItem);
+            var existingItem = cart.FirstOrDefault(item => item.Equals(cartItem));
+            if (existingItem != null)
+            {
+                existingItem.Quantity++;
+            }
+            else
+            {
+                cart.Add(cartItem);
+            }
 
             await _localStorageService.SetItemAsync("cart", cart);
-            
+            _eventService.NotifyCartUpdated();
         }
         public async Task<int> ShopingCartCount()
         {
@@ -51,7 +61,9 @@ namespace BookShop.Web.Services
             return cartItems?.Count ?? 0;
         }
 
-            //Api call
+            
+        
+           //Api call
             public async Task<List<BookDto>> GetAll()
         {
             var response = await _httpClient.GetAsync("BookShop/GetAll");
@@ -72,6 +84,19 @@ namespace BookShop.Web.Services
             return book;
         }
 
-
+        public async Task<List<ShoppingCart>> DeleteItem(ShoppingCart item)
+        {
+            var cart = await GetAllCart();
+            if (cart == null)
+            {
+                return null;
+            }
+            var cartItem = cart.First(x=>x.BookId==item.BookId && x.Title==item.Title);
+            cart.Remove(cartItem);
+            await _localStorageService.SetItemAsync("cart", cart);
+            _eventService.NotifyCartUpdated();
+            return cart;
+            
+        }
     }
 }
