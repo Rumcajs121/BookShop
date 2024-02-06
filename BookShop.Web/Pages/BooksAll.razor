@@ -59,7 +59,6 @@ else
     private async Task AddToCart(BookDto book)
     {
         await BooksService.AddToCart(book);
-        // EventService.NotifyCartUpdated();
     }
      private bool isTileHovered = false;
 

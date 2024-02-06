@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
+using Blazored.Toast.Services;
 
 namespace BookShop.Web.Services
 {
@@ -11,12 +12,14 @@ namespace BookShop.Web.Services
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorageService;
         private readonly EventService _eventService;
+        private readonly IToastService _toastService;
 
-        public BookServices(HttpClient httpClient, ILocalStorageService localStorageService,EventService eventService)
+        public BookServices(HttpClient httpClient, ILocalStorageService localStorageService,EventService eventService, IToastService ToastService)
         {
             _httpClient = httpClient;
             _localStorageService = localStorageService;
             _eventService = eventService;
+            _toastService = ToastService;
         }
 
         public async Task<List<ShoppingCart>> GetAllCart()
@@ -53,8 +56,8 @@ namespace BookShop.Web.Services
             {
                 cart.Add(cartItem);
             }
-
             await _localStorageService.SetItemAsync("cart", cart);
+            _toastService.ShowSuccess($"Added to cart: {book.Title}");
             _eventService.NotifyCartUpdated();
         }
         public async Task<int> ShopingCartCount()
@@ -73,6 +76,7 @@ namespace BookShop.Web.Services
             var cartItem = cart.First(x=>x.BookId==item.BookId && x.Title==item.Title);
             cart.Remove(cartItem);
             await _localStorageService.SetItemAsync("cart", cart);
+            _toastService.ShowError($"Delete item: {cartItem.Title}");
             _eventService.NotifyCartUpdated();
             return cart;
             
@@ -85,16 +89,18 @@ namespace BookShop.Web.Services
             {
                 return null;
             }
-
             var cartItem = cart.FirstOrDefault(x => x.BookId == item.BookId && x.Title == item.Title);
 
             if (cartItem != null)
             {
+ 
                 cartItem.Quantity = item.Quantity;
                 cartItem.TotalPrice = cartItem.OrginalPrice * (decimal)item.Quantity;
                 await _localStorageService.SetItemAsync("cart", cart);
+
                 _eventService.NotifyCartUpdated();
             }
+            _toastService.ShowInfo($"Updated quantity for: {cartItem.Title} ");
             return cart;
 
         }

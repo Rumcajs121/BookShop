@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.Toast;
 using BookShop.Web;
 using BookShop.Web.Services;
 using Microsoft.AspNetCore.Components.Web;
@@ -12,4 +13,5 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://
 builder.Services.AddScoped<IBooksService, BookServices>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddBlazoredToast();
 await builder.Build().RunAsync();

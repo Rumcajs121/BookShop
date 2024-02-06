@@ -11,43 +11,55 @@
                 <table class="table table-bordered table-striped table-hover text-center">
                     <thead>
                         <tr>
-                            <th class="col-md-3">Miniaturka</th>
-                            <th class="col-md-3">Tytuł</th>
-                            <th class="col-md-2">Cena</th>
-                            <th class="col-md-1">Ilość</th>
-                            <th class="col-md-1">Usuń</th>
+                            <th class="col-md-3 col-sm-4 col-4">Miniaturka</th>
+                            <th class="col-md-3 col-sm-4 col-4">Tytuł</th>
+                            <th class="col-md-2 col-sm-2 col-2">Cena</th>
+                            <th class="col-md-1 col-sm-1 col-2">Ilość</th>
+                            <th class="col-md-1 col-sm-1 col-2">Usuń</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in CartItems)
                         {
                             <tr class="text-center align-middle">
-                                <td>
-                                    <a href="@($"/getBook/{item.BookId}")"><img src="@item.Image" class="img-thumbnail" style="width: 100px;" /></a>
+                                <td class="col-md-3 col-sm-4 col-4">
+                                    <a href="@($"/getBook/{item.BookId}")"><img src="@item.Image" class="img-thumbnail" style="width: 100px" /></a>
                                 </td>
-                                <td>
+                                <td class="col-md-3 col-sm-4 col-4">
                                     <a href="@($"/getBook/{item.BookId}")">@item.Title</a>
                                 </td>
-                                <td>
-                                    @item.TotalPrice PLN                     
+                                <td class="col-md-2 col-sm-2 col-2">
+                                    @item.TotalPrice PLN
                                 </td>
-                                <td>
-
+                                <td class="col-md-1 col-sm-1 col-2">
                                     <div class="d-flex flex-column gap-2 align-items-center">
-                                    <input type="number" @bind="@item.Quantity" class="form-control text-center" />
-                                    <button class="btn btn-sm btn-info" @onclick="()=>OnQuantityChanged(item)">Przelicz</button>
+                                        <input type="number" @bind="@item.Quantity" class="form-control text-center" />
+                                        <button class="btn btn-sm btn-info" @onclick="()=>OnQuantityChanged(item)">Przelicz</button>
                                     </div>
                                 </td>
-                                <td >
-                                    <div class="text-center"><button class="btn btn-sm btn-danger " @onclick="()=>DeleteItemCart(item)">Usuń</button></div>
+                                <td class="col-md-1 col-sm-1 col-2">
+                                    <div class="text-center"><button class="btn btn-sm btn-danger" @onclick="()=>DeleteItemCart(item)">Usuń</button></div>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
+
+            <div class="col-md-5 offset-md-7 col-lg-4 offset-lg-8">
+                <ul class="list-group">
+                    <li class="list-group-item "><h4 class="font-weight-bold">Podsumowanie zamówienia</h4></li>
+                    <li class="list-group-item">Ilość produktów: @CartItems.Sum(item => item.Quantity)</li>
+                    <li class="list-group-item">Całkowita kwota: @CartItems.Sum(item => item.TotalPrice) PLN</li>
+                    <li class="list-group-item">Przesyłka: XYZ</li>
+                </ul>
+                <div class="d-grid gap-2 m-1">
+                    <button type="button" class="btn btn-success btn-lg">Zamówienie</button>
+                </div>
+            </div>
         </div>
     </div>
+
 }
 else
 {
@@ -56,6 +68,7 @@ else
 
 @code {
     private List<ShoppingCart> CartItems { get; set; }
+    private List<ShopingCart> Order{ get; set; }
 
     protected override async Task OnInitializedAsync()
     {
