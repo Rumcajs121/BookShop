@@ -38,7 +38,8 @@ namespace BookShop.Web.Services
             {
                 BookId = book.Guid,
                 Title = book.Title,
-                Price = book.Price,
+                OrginalPrice = book.Price,
+                TotalPrice= book.Price,
                 Image = book.Image,
                 Quantity = 1
             };
@@ -46,6 +47,7 @@ namespace BookShop.Web.Services
             if (existingItem != null)
             {
                 existingItem.Quantity++;
+                existingItem.TotalPrice = book.Price * (decimal)existingItem.Quantity;
             }
             else
             {
@@ -61,10 +63,44 @@ namespace BookShop.Web.Services
             return cartItems?.Count ?? 0;
         }
 
+        public async Task<List<ShoppingCart>> DeleteItem(ShoppingCart item)
+        {
+            var cart = await GetAllCart();
+            if (cart == null)
+            {
+                return null;
+            }
+            var cartItem = cart.First(x=>x.BookId==item.BookId && x.Title==item.Title);
+            cart.Remove(cartItem);
+            await _localStorageService.SetItemAsync("cart", cart);
+            _eventService.NotifyCartUpdated();
+            return cart;
             
-        
-           //Api call
-            public async Task<List<BookDto>> GetAll()
+        }
+
+        public async Task<List<ShoppingCart>> ChangeInputQuantityToCart(ShoppingCart item)
+        {
+            var cart = await GetAllCart();
+            if (cart == null)
+            {
+                return null;
+            }
+
+            var cartItem = cart.FirstOrDefault(x => x.BookId == item.BookId && x.Title == item.Title);
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity = item.Quantity;
+                cartItem.TotalPrice = cartItem.OrginalPrice * (decimal)item.Quantity;
+                await _localStorageService.SetItemAsync("cart", cart);
+                _eventService.NotifyCartUpdated();
+            }
+            return cart;
+
+        }
+
+        //Api call
+        public async Task<List<BookDto>> GetAll()
         {
             var response = await _httpClient.GetAsync("BookShop/GetAll");
             response.EnsureSuccessStatusCode();
@@ -84,19 +120,6 @@ namespace BookShop.Web.Services
             return book;
         }
 
-        public async Task<List<ShoppingCart>> DeleteItem(ShoppingCart item)
-        {
-            var cart = await GetAllCart();
-            if (cart == null)
-            {
-                return null;
-            }
-            var cartItem = cart.First(x=>x.BookId==item.BookId && x.Title==item.Title);
-            cart.Remove(cartItem);
-            await _localStorageService.SetItemAsync("cart", cart);
-            _eventService.NotifyCartUpdated();
-            return cart;
-            
-        }
+
     }
 }

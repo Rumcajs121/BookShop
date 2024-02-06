@@ -12,8 +12,8 @@
                     <thead>
                         <tr>
                             <th class="col-md-3">Miniaturka</th>
-                            <th class="col-md-4">Tytuł</th>
-                            <th class="col-md-1">Cena</th>
+                            <th class="col-md-3">Tytuł</th>
+                            <th class="col-md-2">Cena</th>
                             <th class="col-md-1">Ilość</th>
                             <th class="col-md-1">Usuń</th>
                         </tr>
@@ -21,7 +21,7 @@
                     <tbody>
                         @foreach (var item in CartItems)
                         {
-                            <tr>
+                            <tr class="text-center align-middle">
                                 <td>
                                     <a href="@($"/getBook/{item.BookId}")"><img src="@item.Image" class="img-thumbnail" style="width: 100px;" /></a>
                                 </td>
@@ -29,13 +29,17 @@
                                     <a href="@($"/getBook/{item.BookId}")">@item.Title</a>
                                 </td>
                                 <td>
-                                    @ItemPriceForQuantity(item.Price,item.Quantity) zł                              
+                                    @item.TotalPrice PLN                     
                                 </td>
                                 <td>
-                                    <input type="number" min="1" value="@item.Quantity" class="form-control text-center " />
+
+                                    <div class="d-flex flex-column gap-2 align-items-center">
+                                    <input type="number" @bind="@item.Quantity" class="form-control text-center" />
+                                    <button class="btn btn-sm btn-info" @onclick="()=>OnQuantityChanged(item)">Przelicz</button>
+                                    </div>
                                 </td>
-                                <td>
-                                    <button class="btn btn-sm btn-danger" @onclick="()=>DeleteItemCart(item)">Usuń</button>
+                                <td >
+                                    <div class="text-center"><button class="btn btn-sm btn-danger " @onclick="()=>DeleteItemCart(item)">Usuń</button></div>
                                 </td>
                             </tr>
                         }
@@ -51,7 +55,6 @@ else
 }
 
 @code {
-
     private List<ShoppingCart> CartItems { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -67,17 +70,13 @@ else
             StateHasChanged();
         }
     }
-    private decimal ItemPriceForQuantity(decimal price, int quantity)
+    private async Task OnQuantityChanged(ShoppingCart item)
     {
-        if (quantity > 1)
+        var updatedCart = await BooksService.ChangeInputQuantityToCart(item);
+        if (updatedCart != null)
         {
-            decimal x = (decimal)quantity;
-            return price * x;
-        }
-        else
-        {
-            return price;
+            CartItems = updatedCart;
+            StateHasChanged();
         }
     }
-
 }
