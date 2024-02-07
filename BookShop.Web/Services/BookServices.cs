@@ -125,7 +125,27 @@ namespace BookShop.Web.Services
             var book=JsonConvert.DeserializeObject<BookDto>(content);
             return book;
         }
-
+        public async Task<List<NbpRate>> GetExchangeRates()
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                try
+                {
+                    httpClient.BaseAddress = new Uri("https://api.nbp.pl");
+                    var response = await httpClient.GetAsync("api/exchangerates/tables/a/?format=json");
+                    response.EnsureSuccessStatusCode();
+                    var content = await response.Content.ReadAsStringAsync();
+                    var exchangeOfficeTable = JsonConvert.DeserializeObject<List<NbpRate>>(content);
+                    return exchangeOfficeTable;
+                }
+                catch (Exception ex)
+                {
+                    // Tutaj możesz obsłużyć wyjątek lub go zalogować
+                    Console.WriteLine($"Wystąpił błąd: {ex.Message}");
+                    return null; // Zwróć coś lub rzuć dalej wyjątek w zależności od potrzeb
+                }
+            }
+        }
 
     }
 }

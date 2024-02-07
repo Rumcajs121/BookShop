@@ -12,5 +12,6 @@ namespace BookShop.Web.Services
         Task<List<ShoppingCart>> GetAllCart();
         Task<List<ShoppingCart>> DeleteItem(ShoppingCart item);
         Task<List<ShoppingCart>> ChangeInputQuantityToCart(ShoppingCart item);
+        Task<List<NbpRate>> GetExchangeRates(); 
     }
 }

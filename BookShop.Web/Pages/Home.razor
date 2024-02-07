@@ -1,7 +1,90 @@
 ﻿@page "/"
-
+@inject IBooksService BooksService
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container">
+    <h1 class="display-4">O Nas</h1>
+    <div class="row">
+        <div class="col-md-6 mb-4 align-self-center">
+            <img src="https://www.biuroliterackie.pl/biblioteka/wp-content/uploads/2020/02/16_DEBATY__Ksi%C4%99garnia-z-poezj%C4%85__Ewa-Malec__Ci%C4%85gle-musimy-udowadnia%C4%87-%C5%BCe-jeste%C5%9Bmy-potrzebni.jpg" alt="Zdjęcie zespołu" class="img-fluid rounded">
+        </div>
+        <div class="col-md-6">
+            <p class="lead">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec justo at orci aliquet blandit. Ut vel bibendum turpis. Aliquam erat volutpat. In hac habitasse platea dictumst. Sed vel suscipit mauris. Vestibulum auctor, quam vel lacinia scelerisque, felis metus pharetra libero, quis congue justo risus id felis.
+            </p>
+            <p>
+                Fusce vitae neque nec neque varius facilisis. Integer eu quam nec elit commodo dapibus. Suspendisse potenti. Mauris non tellus vitae urna feugiat lobortis ut eget urna. Proin bibendum urna a dui ultrices, non fermentum nisl luctus. Duis tristique semper enim, et cursus neque venenatis id.
+            </p>
+            <p>
+                Curabitur auctor, purus a tincidunt commodo, orci mi posuere ex, sed varius felis libero vel purus. Sed in nunc sit amet justo elementum cursus. Morbi eu tellus id nisi tincidunt vulputate. Duis rhoncus tellus sed urna euismod, a eleifend libero pulvinar. Sed hendrerit, est in cursus bibendum, est quam venenatis sem, a feugiat quam urna ac elit.
+            </p>
+        </div>
+    </div>
 
-Welcome to your new app.
+    <h2 class="text-center mb-4">Polecane Produkty</h2>
+    @if (Books != null && Books.Any())
+    {
+        <div class="row">
+            @foreach (var book in Recommended)
+            {
+                <div class="col-md-3 col-sm-6 mb-4">
+                    <div class="product-card card hoverable-card" @onmouseover=" ()=>
+                    OnTileHover(true)" @onmouseout="() => OnTileHover(false)">
+                        <a href="@($"/getBook/{book.Guid}")">
+                            <img src="@book.Image" class="card-img-top" alt="@($"Produkt {book.Title}")">
+                        </a>
+                        <div class="card-body" style="height: 100px; overflow: hidden;">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text ">
+                                Cena: <span class="text-danger">@book.Price PLN</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="loading-content text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Trwa ładowanie danych...</p>
+        </div>
+    }
+
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center">Ulubione kategorie</h2>
+            <p class="mt-4 text-center">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec justo at orci aliquet blandit. Ut vel bibendum turpis. Aliquam erat volutpat. In hac habitasse platea dictumst. Sed vel suscipit mauris. Vestibulum auctor, quam vel lacinia scelerisque, felis metus pharetra libero, quis congue justo risus id felis.
+            </p>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">Fantasy</div>
+            </div>
+            <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">Naukowa Fikcja</div>
+            </div>
+            <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">Kryminał</div>
+            </div>
+            <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">Romans</div>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    private List<BookDto> Books;
+    private List<BookDto> Recommended;
+    protected override async Task OnInitializedAsync()
+    {
+        Books = await BooksService.GetAll();
+        Recommended = Books.Where(b => b.Availability).Take(4).ToList();
+    }
+    private bool isTileHovered = false;
+    private void OnTileHover(bool isHovered)
+    {
+        isTileHovered = isHovered;
+    }
+}
