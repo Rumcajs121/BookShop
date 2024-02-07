@@ -4,7 +4,7 @@ namespace BookShop.Web.Services
 {
     public interface IBooksService
     {
-        //ApiCall
+
         Task<List<BookDto>> GetAll();
         Task<BookDto> GetBook(string guid);
         Task<int> ShopingCartCount();
@@ -12,6 +12,7 @@ namespace BookShop.Web.Services
         Task<List<ShoppingCart>> GetAllCart();
         Task<List<ShoppingCart>> DeleteItem(ShoppingCart item);
         Task<List<ShoppingCart>> ChangeInputQuantityToCart(ShoppingCart item);
-        Task<List<NbpRate>> GetExchangeRates(); 
+        //Problem z klientem http
+        //Task<List<NbpRate>> GetExchangeRates(); 
     }
 }

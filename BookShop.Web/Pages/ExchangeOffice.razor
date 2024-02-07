@@ -1,4 +1,6 @@
-﻿@page "/exchangeOffice"
+﻿@* 
+//Problem z klientem http
+@page "/exchangeOffice"
 @inject IBooksService BooksService
 @if (ExchangeOfficeTable != null && ExchangeOfficeTable.Any())
 {
@@ -42,4 +44,4 @@ else
     {
         ExchangeOfficeTable = await BooksService.GetExchangeRates();
     }
-}
+} *@

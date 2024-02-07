@@ -20,6 +20,10 @@ namespace BookShop.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var books=await _repository.GettAll();
+            if (books == null)
+            {
+                return BadRequest();
+            }
             return Ok(books);
         }
         [HttpGet]
@@ -27,7 +31,12 @@ namespace BookShop.Api.Controllers
         public async Task<IActionResult> GetBook([FromRoute] Guid IndexBook)
         {
             var book = await _repository.GetBook(IndexBook);
+            if (book == null)
+            {
+                return BadRequest();
+            }
             return Ok(book);
+
         }
     }
 }
