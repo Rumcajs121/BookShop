@@ -14,18 +14,14 @@
             <p class="card-text">Wydawnictwo: @book.Brand</p>
             <p class="card-text">Cena: @book.Price PLN</p>
         </div>
-        <div class="card-buttons">
+        <div class="card-buttons d-flex align-items-center justify-content-end m-4">
             @if (book.Availability)
             {
-                <button class="btn btn-danger" @onclick="()=>AddToCart(book)">
-                    Kup teraz
-                </button>
+                <button class="btn btn-danger btn-lg" @onclick="()=>AddToCart(book)">Kup teraz</button>
             }
             else
             {
-                <div class="alert alert-danger" role="alert" style:"">
-                    NIEDOSTĘPNY
-                </div>
+                <button class="btn btn-dark btn-lg" disabled>Niedostępny</button>
             }
         </div>
     </div>

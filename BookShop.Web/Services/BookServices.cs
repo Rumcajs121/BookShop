@@ -148,5 +148,24 @@ namespace BookShop.Web.Services
         //    }
         //}
 
+        public async Task<List<Quotes>>GetQuote()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.api-ninjas.com/v1/quotes?category=happiness");
+            request.Headers.Add("X-Api-Key", "Q2kOn4aFkVlZMQjMiRgIRw==xwGMAzWa0Lc9g4mX");
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var quotes = JsonConvert.DeserializeObject<List<Quotes>>(content);
+                return quotes;
+            }
+            else
+            {
+                throw new Exception("Błąd pobierania cytatów");
+            }
+        }
+
     }
 }

@@ -3,6 +3,41 @@
 <PageTitle>Home</PageTitle>
 
 <div class="container">
+    @if (quote != null && quote.Any())
+    {
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-sm-12">
+                    <div class="alert alert-secondary" role="alert">
+                        @foreach (var item in quote)
+                        {
+                            <figure class="text-center">
+                                <blockquote class="blockquote">
+                                    <p class="lead">@item.Quote</p>
+                                </blockquote>
+                                <figcaption class="blockquote-footer">
+                                    <cite title="Source Title">@item.Author</cite>
+                                </figcaption>
+                            </figure>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-sm-12">
+                    <div class="loading-content text-center">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Trwa ładowanie danych...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     <h1 class="display-4">O Nas</h1>
     <div class="row">
         <div class="col-md-6 mb-4 align-self-center">
@@ -53,7 +88,7 @@
     }
 
 
-    <div class="row mt-5">
+    <div class="row m-5">
         <div class="col-12">
             <h2 class="text-center">Ulubione kategorie</h2>
             <p class="mt-4 text-center">
@@ -74,17 +109,21 @@
         </div>
     </div>
 </div>
-@code{
+@code {
     private List<BookDto> Books;
     private List<BookDto> Recommended;
+    private List<Quotes> quote;
     protected override async Task OnInitializedAsync()
     {
         Books = await BooksService.GetAll();
         Recommended = Books.Where(b => b.Availability).Take(4).ToList();
+        quote = await BooksService.GetQuote();
+
     }
     private bool isTileHovered = false;
     private void OnTileHover(bool isHovered)
     {
         isTileHovered = isHovered;
     }
+
 }
