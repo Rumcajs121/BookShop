@@ -47,7 +47,7 @@ Projekt jest dobrym przykładem wykorzystania technologii ASP.NET Web API, Entit
 #	WIDOK SZCZEGÓŁÓW DLA WYBRANEJ KSIĄŻKI 
 ![Screenshot_17](https://github.com/Rumcajs121/BookShop/assets/116017854/2aafa4c9-3bf7-45ca-b601-02fdc56d49fc)
 #	KOSZYK:
- ![Screenshot_6](https://github.com/Rumcajs121/BookShop/assets/116017854/1e023dd9-0d8a-4e24-9209-ea350438d7a2)
+![Screenshot_10](https://github.com/Rumcajs121/BookShop/assets/116017854/8747f804-f786-44c6-bc39-29d384bc9ecf)
 #	API:
  ![Screenshot_14](https://github.com/Rumcajs121/BookShop/assets/116017854/de428385-b063-4830-a158-da53792f3f45)
 #	BAZA DANYCH:
