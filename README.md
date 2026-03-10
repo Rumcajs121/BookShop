@@ -124,5 +124,3 @@ Projekt został zrealizowany jako praca egzaminacyjna na studiach magisterskich.
 ## 👨‍💻 Autor
 **Rumcajs121** - Student Informatyki, Społeczna Akademia Nauk w Łodzi
 
----
-*Projekt zrealizowany w ramach przedmiotu Internet Technologies and Usage Patterns in Programming Technologies*
